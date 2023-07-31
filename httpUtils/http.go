@@ -101,13 +101,13 @@ func (baseHttpClient *BaseHttpClient) DoRaw(method, rURL string, reqBody []byte,
 	return httpResponse, nil
 }
 
-func (baseHttpClient *BaseHttpClient) DoEnvelope(method, url string, params url.Values, headers http.Header, obj interface{}, errorEnvelope interface{}, successEnvelope interface{}) error {
+func (baseHttpClient *BaseHttpClient) DoEnvelope(method, url string, params url.Values, headers http.Header, obj interface{}) error {
 	resp, err := baseHttpClient.Do(method, url, params, headers)
 	if err != nil {
 		return err
 	}
 
-	err = readEnvelope(resp, obj, errorEnvelope, successEnvelope)
+	err = readEnvelope(resp, obj)
 	if err != nil {
 		if _, ok := err.(Error); !ok {
 			baseHttpClient.httpLog.Printf("Error parsing JSON response: %v", err)
@@ -117,28 +117,20 @@ func (baseHttpClient *BaseHttpClient) DoEnvelope(method, url string, params url.
 	return err
 }
 
-func readEnvelope(resp HTTPResponse, obj interface{}, errorEnvelope interface{}, successEnvelope interface{}) error {
+func readEnvelope(resp HTTPResponse, obj interface{}) error {
 	if resp.Response.StatusCode >= http.StatusBadRequest {
-		if err := json.Unmarshal(resp.Body, &errorEnvelope); err != nil {
+		var e HttpErrorEnvelope
+		if err := json.Unmarshal(resp.Body, &e); err != nil {
 			return NewErrorHelper(DataError, "Error parsing response.", nil)
 		}
-		if e, ok := errorEnvelope.(HttpErrorEnvelope); ok {
-			return NewError(e.ErrorType, e.Message, resp.Response.StatusCode, e.Data)
-		} else {
-			panic("ERROR ENVELOPE TYPE NOT FOUND !!!")
-		}
+		return NewError(e.ErrorType, e.Message, resp.Response.StatusCode, e.Data)
 	}
-
-	if e, ok := successEnvelope.(HttpSuccessEnvelope); ok {
-		successEnvl := e
-		successEnvl.Data = obj
-		if err := json.Unmarshal(resp.Body, &successEnvl); err != nil {
-			return NewErrorHelper(DataError, "Error parsing response.", nil)
-		}
-		return nil
-	} else {
-		panic("SUCCESS ENVELOPE TYPE NOT FOUND !!!")
+	successEnvl := HttpSuccessEnvelope{}
+	successEnvl.Data = obj
+	if err := json.Unmarshal(resp.Body, &successEnvl); err != nil {
+		return NewErrorHelper(DataError, "Error parsing response.", nil)
 	}
+	return nil
 }
 
 func (baseHttpClient *BaseHttpClient) DoJSON(method, url string, params url.Values, headers http.Header, obj interface{}) (HTTPResponse, error) {

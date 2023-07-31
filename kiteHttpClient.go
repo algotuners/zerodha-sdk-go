@@ -42,7 +42,7 @@ func (kiteHttpClient *KiteHttpClient) GetLoginURL() string {
 	return fmt.Sprintf("%s/connect/login?api_key=%s&v=%s", constants.KiteBaseURI, kiteHttpClient.encToken, constants.KiteHeaderVersion)
 }
 
-func (kiteHttpClient *KiteHttpClient) doEnvelope(method, uri string, params url.Values, headers http.Header, v interface{}, errorEnvelope interface{}, successEnvelope interface{}) error {
+func (kiteHttpClient *KiteHttpClient) doEnvelope(method, uri string, params url.Values, headers http.Header, v interface{}) error {
 	if params == nil {
 		params = url.Values{}
 	}
@@ -55,7 +55,7 @@ func (kiteHttpClient *KiteHttpClient) doEnvelope(method, uri string, params url.
 		authHeader := fmt.Sprintf("enctoken %s", kiteHttpClient.encToken)
 		headers.Add("Authorization", authHeader)
 	}
-	return kiteHttpClient.httpClient.DoEnvelope(method, kiteHttpClient.baseURI+uri, params, headers, v, errorEnvelope, successEnvelope)
+	return kiteHttpClient.httpClient.DoEnvelope(method, kiteHttpClient.baseURI+uri, params, headers, v)
 }
 
 func (kiteHttpClient *KiteHttpClient) do(method, uri string, params url.Values, headers http.Header) (httpUtils.HTTPResponse, error) {

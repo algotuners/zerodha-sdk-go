@@ -103,76 +103,62 @@ type Trades []Trade
 
 func (kiteHttpClient *KiteHttpClient) GetOrders() (Orders, error) {
 	var orders Orders
-	var successEnvelope httpUtils.HttpSuccessEnvelope
-	var errorEnvelope httpUtils.HttpErrorEnvelope
-	err := kiteHttpClient.doEnvelope(http.MethodGet, constants.URIGetOrders, nil, nil, &orders, errorEnvelope, successEnvelope)
+	err := kiteHttpClient.doEnvelope(http.MethodGet, constants.URIGetOrders, nil, nil, &orders)
 	return orders, err
 }
 
 func (kiteHttpClient *KiteHttpClient) GetTrades() (Trades, error) {
 	var trades Trades
-	var successEnvelope httpUtils.HttpSuccessEnvelope
-	var errorEnvelope httpUtils.HttpErrorEnvelope
-	err := kiteHttpClient.doEnvelope(http.MethodGet, constants.URIGetTrades, nil, nil, &trades, errorEnvelope, successEnvelope)
+	err := kiteHttpClient.doEnvelope(http.MethodGet, constants.URIGetTrades, nil, nil, &trades)
 	return trades, err
 }
 
 func (kiteHttpClient *KiteHttpClient) GetOrderHistory(OrderID string) ([]Order, error) {
 	var orderHistory []Order
-	var successEnvelope httpUtils.HttpSuccessEnvelope
-	var errorEnvelope httpUtils.HttpErrorEnvelope
-	err := kiteHttpClient.doEnvelope(http.MethodGet, fmt.Sprintf(constants.URIGetOrderHistory, OrderID), nil, nil, &orderHistory, errorEnvelope, successEnvelope)
+	err := kiteHttpClient.doEnvelope(http.MethodGet, fmt.Sprintf(constants.URIGetOrderHistory, OrderID), nil, nil, &orderHistory)
 	return orderHistory, err
 }
 
 func (kiteHttpClient *KiteHttpClient) GetOrderTrades(OrderID string) ([]Trade, error) {
 	var orderTrades []Trade
-	var successEnvelope httpUtils.HttpSuccessEnvelope
-	var errorEnvelope httpUtils.HttpErrorEnvelope
-	err := kiteHttpClient.doEnvelope(http.MethodGet, fmt.Sprintf(constants.URIGetOrderTrades, OrderID), nil, nil, &orderTrades, errorEnvelope, successEnvelope)
+	err := kiteHttpClient.doEnvelope(http.MethodGet, fmt.Sprintf(constants.URIGetOrderTrades, OrderID), nil, nil, &orderTrades)
 	return orderTrades, err
 }
 
 func (kiteHttpClient *KiteHttpClient) PlaceOrder(variety string, orderParams OrderParams) (OrderResponse, error) {
 	var (
-		orderResponse   OrderResponse
-		params          url.Values
-		err             error
-		successEnvelope httpUtils.HttpSuccessEnvelope
-		errorEnvelope   httpUtils.HttpErrorEnvelope
+		orderResponse OrderResponse
+		params        url.Values
+		err           error
 	)
 
 	if params, err = query.Values(orderParams); err != nil {
 		return orderResponse, httpUtils.NewErrorHelper(httpUtils.InputError, fmt.Sprintf("Error decoding order params: %v", err), nil)
 	}
 
-	err = kiteHttpClient.doEnvelope(http.MethodPost, fmt.Sprintf(constants.URIPlaceOrder, variety), params, nil, &orderResponse, errorEnvelope, successEnvelope)
+	err = kiteHttpClient.doEnvelope(http.MethodPost, fmt.Sprintf(constants.URIPlaceOrder, variety), params, nil, &orderResponse)
 	return orderResponse, err
 }
 
 func (kiteHttpClient *KiteHttpClient) ModifyOrder(variety string, orderID string, orderParams OrderParams) (OrderResponse, error) {
 	var (
-		orderResponse   OrderResponse
-		params          url.Values
-		err             error
-		successEnvelope httpUtils.HttpSuccessEnvelope
-		errorEnvelope   httpUtils.HttpErrorEnvelope
+		orderResponse OrderResponse
+		params        url.Values
+		err           error
 	)
 
 	if params, err = query.Values(orderParams); err != nil {
 		return orderResponse, httpUtils.NewErrorHelper(httpUtils.InputError, fmt.Sprintf("Error decoding order params: %v", err), nil)
 	}
 
-	err = kiteHttpClient.doEnvelope(http.MethodPut, fmt.Sprintf(constants.URIModifyOrder, variety, orderID), params, nil, &orderResponse, errorEnvelope, successEnvelope)
+	err = kiteHttpClient.doEnvelope(http.MethodPut, fmt.Sprintf(constants.URIModifyOrder, variety, orderID), params, nil, &orderResponse)
 	return orderResponse, err
 }
 
 func (kiteHttpClient *KiteHttpClient) CancelOrder(variety string, orderID string, parentOrderID *string) (OrderResponse, error) {
 	var (
-		orderResponse   OrderResponse
-		params          url.Values
-		successEnvelope httpUtils.HttpSuccessEnvelope
-		errorEnvelope   httpUtils.HttpErrorEnvelope
+		orderResponse OrderResponse
+		params        url.Values
 	)
 
 	if parentOrderID != nil {
@@ -181,7 +167,7 @@ func (kiteHttpClient *KiteHttpClient) CancelOrder(variety string, orderID string
 		params.Add("parent_order_id", *parentOrderID)
 	}
 
-	err := kiteHttpClient.doEnvelope(http.MethodDelete, fmt.Sprintf(constants.URICancelOrder, variety, orderID), params, nil, &orderResponse, errorEnvelope, successEnvelope)
+	err := kiteHttpClient.doEnvelope(http.MethodDelete, fmt.Sprintf(constants.URICancelOrder, variety, orderID), params, nil, &orderResponse)
 	return orderResponse, err
 }
 
