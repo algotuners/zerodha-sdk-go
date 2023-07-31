@@ -122,22 +122,21 @@ func readEnvelope(resp HTTPResponse, obj interface{}, errorEnvelope interface{},
 		if err := json.Unmarshal(resp.Body, &errorEnvelope); err != nil {
 			return NewErrorHelper(DataError, "Error parsing response.", nil)
 		}
-		switch e := errorEnvelope.(type) {
-		case HttpErrorEnvelope:
+		if e, ok := errorEnvelope.(HttpErrorEnvelope); ok {
 			return NewError(e.ErrorType, e.Message, resp.Response.StatusCode, e.Data)
-		default:
+		} else {
 			panic("ERROR ENVELOPE TYPE NOT FOUND !!!")
 		}
 	}
-	switch e := successEnvelope.(type) {
-	case HttpSuccessEnvelope:
+
+	if e, ok := successEnvelope.(HttpSuccessEnvelope); ok {
 		successEnvl := e
 		successEnvl.Data = obj
 		if err := json.Unmarshal(resp.Body, &successEnvl); err != nil {
 			return NewErrorHelper(DataError, "Error parsing response.", nil)
 		}
 		return nil
-	default:
+	} else {
 		panic("SUCCESS ENVELOPE TYPE NOT FOUND !!!")
 	}
 }
