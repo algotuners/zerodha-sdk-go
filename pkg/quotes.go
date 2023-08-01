@@ -1,11 +1,11 @@
-package zerodha_sdk_go
+package pkg
 
 import (
 	"fmt"
 	"github.com/gocarina/gocsv"
 	"github.com/google/go-querystring/query"
-	"github.com/mayank-sheoran/zerodha-sdk-go/constants"
-	"github.com/mayank-sheoran/zerodha-sdk-go/httpUtils"
+	"github.com/mayank-sheoran/zerodha-sdk-go/pkg/constants"
+	httpUtils2 "github.com/mayank-sheoran/zerodha-sdk-go/pkg/httpUtils"
 	"github.com/zerodha/gokiteconnect/v4/models"
 	"net/http"
 	"net/url"
@@ -89,12 +89,10 @@ type Instruments []Instrument
 
 func (kiteHttpClient *KiteHttpClient) GetQuote(instruments ...string) (Quote, error) {
 	var (
-		err             error
-		quotes          Quote
-		successEnvelope httpUtils.HttpSuccessEnvelope
-		errorEnvelope   httpUtils.HttpErrorEnvelope
-		params          url.Values
-		qParams         quoteParams
+		err     error
+		quotes  Quote
+		params  url.Values
+		qParams quoteParams
 	)
 
 	qParams = quoteParams{
@@ -102,21 +100,19 @@ func (kiteHttpClient *KiteHttpClient) GetQuote(instruments ...string) (Quote, er
 	}
 
 	if params, err = query.Values(qParams); err != nil {
-		return quotes, httpUtils.NewErrorHelper(httpUtils.InputError, fmt.Sprintf("Error decoding order params: %v", err), nil)
+		return quotes, httpUtils2.NewErrorHelper(httpUtils2.InputError, fmt.Sprintf("Error decoding order params: %v", err), nil)
 	}
 
-	err = kiteHttpClient.doEnvelope(http.MethodGet, constants.URIGetQuote, params, nil, &quotes, errorEnvelope, successEnvelope)
+	err = kiteHttpClient.doEnvelope(http.MethodGet, constants.URIGetQuote, params, nil, &quotes)
 	return quotes, err
 }
 
 func (kiteHttpClient *KiteHttpClient) GetLTP(instruments ...string) (QuoteLTP, error) {
 	var (
-		err             error
-		quotes          QuoteLTP
-		params          url.Values
-		qParams         quoteParams
-		successEnvelope httpUtils.HttpSuccessEnvelope
-		errorEnvelope   httpUtils.HttpErrorEnvelope
+		err     error
+		quotes  QuoteLTP
+		params  url.Values
+		qParams quoteParams
 	)
 
 	qParams = quoteParams{
@@ -124,21 +120,19 @@ func (kiteHttpClient *KiteHttpClient) GetLTP(instruments ...string) (QuoteLTP, e
 	}
 
 	if params, err = query.Values(qParams); err != nil {
-		return quotes, httpUtils.NewErrorHelper(httpUtils.InputError, fmt.Sprintf("Error decoding order params: %v", err), nil)
+		return quotes, httpUtils2.NewErrorHelper(httpUtils2.InputError, fmt.Sprintf("Error decoding order params: %v", err), nil)
 	}
 
-	err = kiteHttpClient.doEnvelope(http.MethodGet, constants.URIGetQuote, params, nil, &quotes, errorEnvelope, successEnvelope)
+	err = kiteHttpClient.doEnvelope(http.MethodGet, constants.URIGetQuote, params, nil, &quotes)
 	return quotes, err
 }
 
 func (kiteHttpClient *KiteHttpClient) GetOHLC(instruments ...string) (QuoteOHLC, error) {
 	var (
-		err             error
-		quotes          QuoteOHLC
-		params          url.Values
-		qParams         quoteParams
-		successEnvelope httpUtils.HttpSuccessEnvelope
-		errorEnvelope   httpUtils.HttpErrorEnvelope
+		err     error
+		quotes  QuoteOHLC
+		params  url.Values
+		qParams quoteParams
 	)
 
 	qParams = quoteParams{
@@ -146,10 +140,10 @@ func (kiteHttpClient *KiteHttpClient) GetOHLC(instruments ...string) (QuoteOHLC,
 	}
 
 	if params, err = query.Values(qParams); err != nil {
-		return quotes, httpUtils.NewErrorHelper(httpUtils.InputError, fmt.Sprintf("Error decoding order params: %v", err), nil)
+		return quotes, httpUtils2.NewErrorHelper(httpUtils2.InputError, fmt.Sprintf("Error decoding order params: %v", err), nil)
 	}
 
-	err = kiteHttpClient.doEnvelope(http.MethodGet, constants.URIGetQuote, params, nil, &quotes, errorEnvelope, successEnvelope)
+	err = kiteHttpClient.doEnvelope(http.MethodGet, constants.URIGetQuote, params, nil, &quotes)
 	return quotes, err
 }
 
@@ -169,29 +163,29 @@ func (kiteHttpClient *KiteHttpClient) formatHistoricalData(inp historicalDataRec
 		)
 
 		if ds, ok = i[0].(string); !ok {
-			return data, httpUtils.NewErrorHelper(httpUtils.GeneralError, fmt.Sprintf("Error decoding response `date`: %v", i[0]), nil)
+			return data, httpUtils2.NewErrorHelper(httpUtils2.GeneralError, fmt.Sprintf("Error decoding response `date`: %v", i[0]), nil)
 		}
 
 		if open, ok = i[1].(float64); !ok {
-			return data, httpUtils.NewErrorHelper(httpUtils.GeneralError, fmt.Sprintf("Error decoding response `open`: %v", i[1]), nil)
+			return data, httpUtils2.NewErrorHelper(httpUtils2.GeneralError, fmt.Sprintf("Error decoding response `open`: %v", i[1]), nil)
 		}
 
 		if high, ok = i[2].(float64); !ok {
-			return data, httpUtils.NewErrorHelper(httpUtils.GeneralError, fmt.Sprintf("Error decoding response `high`: %v", i[2]), nil)
+			return data, httpUtils2.NewErrorHelper(httpUtils2.GeneralError, fmt.Sprintf("Error decoding response `high`: %v", i[2]), nil)
 		}
 
 		if low, ok = i[3].(float64); !ok {
-			return data, httpUtils.NewErrorHelper(httpUtils.GeneralError, fmt.Sprintf("Error decoding response `low`: %v", i[3]), nil)
+			return data, httpUtils2.NewErrorHelper(httpUtils2.GeneralError, fmt.Sprintf("Error decoding response `low`: %v", i[3]), nil)
 		}
 
 		if close, ok = i[4].(float64); !ok {
-			return data, httpUtils.NewErrorHelper(httpUtils.GeneralError, fmt.Sprintf("Error decoding response `close`: %v", i[4]), nil)
+			return data, httpUtils2.NewErrorHelper(httpUtils2.GeneralError, fmt.Sprintf("Error decoding response `close`: %v", i[4]), nil)
 		}
 
 		// Assert volume
 		v, ok := i[5].(float64)
 		if !ok {
-			return data, httpUtils.NewErrorHelper(httpUtils.GeneralError, fmt.Sprintf("Error decoding response `volume`: %v", i[5]), nil)
+			return data, httpUtils2.NewErrorHelper(httpUtils2.GeneralError, fmt.Sprintf("Error decoding response `volume`: %v", i[5]), nil)
 		}
 
 		volume = int(v)
@@ -200,7 +194,7 @@ func (kiteHttpClient *KiteHttpClient) formatHistoricalData(inp historicalDataRec
 			// Assert OI
 			OIT, ok := i[6].(float64)
 			if !ok {
-				return data, httpUtils.NewErrorHelper(httpUtils.GeneralError, fmt.Sprintf("Error decoding response `oi`: %v", i[6]), nil)
+				return data, httpUtils2.NewErrorHelper(httpUtils2.GeneralError, fmt.Sprintf("Error decoding response `oi`: %v", i[6]), nil)
 			}
 			OI = int(OIT)
 		}
@@ -208,7 +202,7 @@ func (kiteHttpClient *KiteHttpClient) formatHistoricalData(inp historicalDataRec
 		// Parse string to date
 		d, err := time.Parse("2006-01-02T15:04:05-0700", ds)
 		if err != nil {
-			return data, httpUtils.NewErrorHelper(httpUtils.GeneralError, fmt.Sprintf("Error decoding response: %v", err), nil)
+			return data, httpUtils2.NewErrorHelper(httpUtils2.GeneralError, fmt.Sprintf("Error decoding response: %v", err), nil)
 		}
 
 		data = append(data, HistoricalData{
@@ -227,12 +221,10 @@ func (kiteHttpClient *KiteHttpClient) formatHistoricalData(inp historicalDataRec
 
 func (kiteHttpClient *KiteHttpClient) GetHistoricalData(instrumentToken int, interval string, fromDate time.Time, toDate time.Time, continuous bool, OI bool) ([]HistoricalData, error) {
 	var (
-		err             error
-		data            []HistoricalData
-		params          url.Values
-		inpParams       historicalDataParams
-		successEnvelope httpUtils.HttpSuccessEnvelope
-		errorEnvelope   httpUtils.HttpErrorEnvelope
+		err       error
+		data      []HistoricalData
+		params    url.Values
+		inpParams historicalDataParams
 	)
 
 	inpParams.InstrumentToken = instrumentToken
@@ -251,11 +243,11 @@ func (kiteHttpClient *KiteHttpClient) GetHistoricalData(instrumentToken int, int
 	}
 
 	if params, err = query.Values(inpParams); err != nil {
-		return data, httpUtils.NewErrorHelper(httpUtils.InputError, fmt.Sprintf("Error decoding order params: %v", err), nil)
+		return data, httpUtils2.NewErrorHelper(httpUtils2.InputError, fmt.Sprintf("Error decoding order params: %v", err), nil)
 	}
 
 	var resp historicalDataReceived
-	if err := kiteHttpClient.doEnvelope(http.MethodGet, fmt.Sprintf(constants.URIGetHistorical, instrumentToken, interval), params, nil, &resp, errorEnvelope, successEnvelope); err != nil {
+	if err := kiteHttpClient.doEnvelope(http.MethodGet, fmt.Sprintf(constants.URIGetHistorical, instrumentToken, interval), params, nil, &resp); err != nil {
 		return data, err
 	}
 
@@ -265,7 +257,7 @@ func (kiteHttpClient *KiteHttpClient) GetHistoricalData(instrumentToken int, int
 func (kiteHttpClient *KiteHttpClient) parseInstruments(data interface{}, url string, params url.Values) error {
 	var (
 		err  error
-		resp httpUtils.HTTPResponse
+		resp httpUtils2.HTTPResponse
 	)
 
 	// Get CSV response
@@ -275,7 +267,7 @@ func (kiteHttpClient *KiteHttpClient) parseInstruments(data interface{}, url str
 
 	// Unmarshal CSV response to instruments
 	if err = gocsv.UnmarshalBytes(resp.Body, data); err != nil {
-		return httpUtils.NewErrorHelper(httpUtils.GeneralError, fmt.Sprintf("Error parsing csv response: %v", err), nil)
+		return httpUtils2.NewErrorHelper(httpUtils2.GeneralError, fmt.Sprintf("Error parsing csv response: %v", err), nil)
 	}
 
 	return nil

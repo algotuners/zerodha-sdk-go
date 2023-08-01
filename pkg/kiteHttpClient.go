@@ -1,9 +1,9 @@
-package zerodha_sdk_go
+package pkg
 
 import (
 	"fmt"
-	"github.com/mayank-sheoran/zerodha-sdk-go/constants"
-	"github.com/mayank-sheoran/zerodha-sdk-go/httpUtils"
+	"github.com/mayank-sheoran/zerodha-sdk-go/pkg/constants"
+	httpUtils2 "github.com/mayank-sheoran/zerodha-sdk-go/pkg/httpUtils"
 	"net/http"
 	"net/url"
 	"time"
@@ -13,11 +13,11 @@ type KiteHttpClient struct {
 	encToken   string
 	debug      bool
 	baseURI    string
-	httpClient httpUtils.HTTPClient
+	httpClient httpUtils2.HTTPClient
 }
 
 func (kiteHttpClient *KiteHttpClient) SetHTTPClient(h *http.Client) {
-	kiteHttpClient.httpClient = httpUtils.GenerateHttpClient(h, kiteHttpClient.debug)
+	kiteHttpClient.httpClient = httpUtils2.GenerateHttpClient(h, kiteHttpClient.debug)
 }
 
 func (kiteHttpClient *KiteHttpClient) SetDebug(debug bool) {
@@ -58,7 +58,7 @@ func (kiteHttpClient *KiteHttpClient) doEnvelope(method, uri string, params url.
 	return kiteHttpClient.httpClient.DoEnvelope(method, kiteHttpClient.baseURI+uri, params, headers, v)
 }
 
-func (kiteHttpClient *KiteHttpClient) do(method, uri string, params url.Values, headers http.Header) (httpUtils.HTTPResponse, error) {
+func (kiteHttpClient *KiteHttpClient) do(method, uri string, params url.Values, headers http.Header) (httpUtils2.HTTPResponse, error) {
 	if params == nil {
 		params = url.Values{}
 	}
@@ -74,7 +74,7 @@ func (kiteHttpClient *KiteHttpClient) do(method, uri string, params url.Values, 
 	return kiteHttpClient.httpClient.Do(method, kiteHttpClient.baseURI+uri, params, headers)
 }
 
-func (kiteHttpClient *KiteHttpClient) doRaw(method, uri string, reqBody []byte, headers http.Header) (httpUtils.HTTPResponse, error) {
+func (kiteHttpClient *KiteHttpClient) doRaw(method, uri string, reqBody []byte, headers http.Header) (httpUtils2.HTTPResponse, error) {
 	if headers == nil {
 		headers = map[string][]string{}
 	}

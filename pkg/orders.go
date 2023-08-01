@@ -1,10 +1,10 @@
-package zerodha_sdk_go
+package pkg
 
 import (
 	"fmt"
 	"github.com/google/go-querystring/query"
-	"github.com/mayank-sheoran/zerodha-sdk-go/constants"
-	"github.com/mayank-sheoran/zerodha-sdk-go/httpUtils"
+	"github.com/mayank-sheoran/zerodha-sdk-go/pkg/constants"
+	"github.com/mayank-sheoran/zerodha-sdk-go/pkg/httpUtils"
 	"github.com/zerodha/gokiteconnect/v4/models"
 	"net/http"
 	"net/url"
