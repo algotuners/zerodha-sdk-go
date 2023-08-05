@@ -101,31 +101,43 @@ type Trade struct {
 
 type Trades []Trade
 
-func (kiteHttpClient *KiteHttpClient) GetOrders() (Orders, error) {
+func (kiteHttpClient *KiteHttpClient) GetOrders() Orders {
 	var orders Orders
 	err := kiteHttpClient.doEnvelope(http.MethodGet, constants.URIGetOrders, nil, nil, &orders)
-	return orders, err
+	if err != nil {
+		panic(err.Error())
+	}
+	return orders
 }
 
-func (kiteHttpClient *KiteHttpClient) GetTrades() (Trades, error) {
+func (kiteHttpClient *KiteHttpClient) GetTrades() Trades {
 	var trades Trades
 	err := kiteHttpClient.doEnvelope(http.MethodGet, constants.URIGetTrades, nil, nil, &trades)
-	return trades, err
+	if err != nil {
+		panic(err.Error())
+	}
+	return trades
 }
 
-func (kiteHttpClient *KiteHttpClient) GetOrderHistory(OrderID string) ([]Order, error) {
+func (kiteHttpClient *KiteHttpClient) GetOrderHistory(OrderID string) []Order {
 	var orderHistory []Order
 	err := kiteHttpClient.doEnvelope(http.MethodGet, fmt.Sprintf(constants.URIGetOrderHistory, OrderID), nil, nil, &orderHistory)
-	return orderHistory, err
+	if err != nil {
+		panic(err.Error())
+	}
+	return orderHistory
 }
 
-func (kiteHttpClient *KiteHttpClient) GetOrderTrades(OrderID string) ([]Trade, error) {
+func (kiteHttpClient *KiteHttpClient) GetOrderTrades(OrderID string) []Trade {
 	var orderTrades []Trade
 	err := kiteHttpClient.doEnvelope(http.MethodGet, fmt.Sprintf(constants.URIGetOrderTrades, OrderID), nil, nil, &orderTrades)
-	return orderTrades, err
+	if err != nil {
+		panic(err.Error())
+	}
+	return orderTrades
 }
 
-func (kiteHttpClient *KiteHttpClient) PlaceOrder(variety string, orderParams OrderParams) (OrderResponse, error) {
+func (kiteHttpClient *KiteHttpClient) PlaceOrder(variety string, orderParams OrderParams) OrderResponse {
 	var (
 		orderResponse OrderResponse
 		params        url.Values
@@ -133,14 +145,17 @@ func (kiteHttpClient *KiteHttpClient) PlaceOrder(variety string, orderParams Ord
 	)
 
 	if params, err = query.Values(orderParams); err != nil {
-		return orderResponse, httpUtils.NewErrorHelper(httpUtils.InputError, fmt.Sprintf("Error decoding order params: %v", err), nil)
+		panic(httpUtils.NewErrorHelper(httpUtils.InputError, fmt.Sprintf("Error decoding order params: %v", err), nil))
 	}
 
 	err = kiteHttpClient.doEnvelope(http.MethodPost, fmt.Sprintf(constants.URIPlaceOrder, variety), params, nil, &orderResponse)
-	return orderResponse, err
+	if err != nil {
+		panic(err.Error())
+	}
+	return orderResponse
 }
 
-func (kiteHttpClient *KiteHttpClient) ModifyOrder(variety string, orderID string, orderParams OrderParams) (OrderResponse, error) {
+func (kiteHttpClient *KiteHttpClient) ModifyOrder(variety string, orderID string, orderParams OrderParams) OrderResponse {
 	var (
 		orderResponse OrderResponse
 		params        url.Values
@@ -148,14 +163,17 @@ func (kiteHttpClient *KiteHttpClient) ModifyOrder(variety string, orderID string
 	)
 
 	if params, err = query.Values(orderParams); err != nil {
-		return orderResponse, httpUtils.NewErrorHelper(httpUtils.InputError, fmt.Sprintf("Error decoding order params: %v", err), nil)
+		panic(httpUtils.NewErrorHelper(httpUtils.InputError, fmt.Sprintf("Error decoding order params: %v", err), nil))
 	}
 
 	err = kiteHttpClient.doEnvelope(http.MethodPut, fmt.Sprintf(constants.URIModifyOrder, variety, orderID), params, nil, &orderResponse)
-	return orderResponse, err
+	if err != nil {
+		panic(err.Error())
+	}
+	return orderResponse
 }
 
-func (kiteHttpClient *KiteHttpClient) CancelOrder(variety string, orderID string, parentOrderID *string) (OrderResponse, error) {
+func (kiteHttpClient *KiteHttpClient) CancelOrder(variety string, orderID string, parentOrderID *string) OrderResponse {
 	var (
 		orderResponse OrderResponse
 		params        url.Values
@@ -168,9 +186,12 @@ func (kiteHttpClient *KiteHttpClient) CancelOrder(variety string, orderID string
 	}
 
 	err := kiteHttpClient.doEnvelope(http.MethodDelete, fmt.Sprintf(constants.URICancelOrder, variety, orderID), params, nil, &orderResponse)
-	return orderResponse, err
+	if err != nil {
+		panic(err.Error())
+	}
+	return orderResponse
 }
 
-func (kiteHttpClient *KiteHttpClient) ExitOrder(variety string, orderID string, parentOrderID *string) (OrderResponse, error) {
+func (kiteHttpClient *KiteHttpClient) ExitOrder(variety string, orderID string, parentOrderID *string) OrderResponse {
 	return kiteHttpClient.CancelOrder(variety, orderID, parentOrderID)
 }
