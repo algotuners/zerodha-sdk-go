@@ -5,12 +5,13 @@ import (
 	"net/http"
 )
 
-func KiteConnect(encToken string) *KiteHttpClient {
+func KiteConnect(encToken string, apiKey string) *KiteHttpClient {
 	client := &KiteHttpClient{}
 	client.SetHTTPClient(&http.Client{
 		Timeout: constants.RequestTimeout,
 	})
 	client.SetBaseURI(constants.BaseURI)
 	client.SetEncToken(encToken)
+	client.SetApiKey(apiKey)
 	return client
 }

@@ -10,10 +10,12 @@ import (
 )
 
 type KiteHttpClient struct {
-	encToken   string
-	debug      bool
-	baseURI    string
-	httpClient httpUtils2.HTTPClient
+	encToken    string
+	apiKey      string
+	accessToken string
+	debug       bool
+	baseURI     string
+	httpClient  httpUtils2.HTTPClient
 }
 
 func (kiteHttpClient *KiteHttpClient) SetHTTPClient(h *http.Client) {
@@ -38,8 +40,20 @@ func (kiteHttpClient *KiteHttpClient) SetEncToken(encToken string) {
 	kiteHttpClient.encToken = encToken
 }
 
+func (kiteHttpClient *KiteHttpClient) SetAccessToken(accessToken string) {
+	kiteHttpClient.accessToken = accessToken
+}
+
+func (kiteHttpClient *KiteHttpClient) SetApiKey(apiKey string) {
+	kiteHttpClient.apiKey = apiKey
+}
+
+func (kiteHttpClient *KiteHttpClient) GetEncToken() string {
+	return kiteHttpClient.encToken
+}
+
 func (kiteHttpClient *KiteHttpClient) GetLoginURL() string {
-	return fmt.Sprintf("%s/connect/login?api_key=%s&v=%s", constants.KiteBaseURI, kiteHttpClient.encToken, constants.KiteHeaderVersion)
+	return fmt.Sprintf("%s/connect/login?api_key=%s&v=%s", constants.KiteBaseURI, kiteHttpClient.apiKey, constants.KiteHeaderVersion)
 }
 
 func (kiteHttpClient *KiteHttpClient) doEnvelope(method, uri string, params url.Values, headers http.Header, v interface{}) error {
