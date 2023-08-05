@@ -79,7 +79,7 @@ func main() {
 	//	"kitefront",
 	//)
 	//
-	//ticker = kiteticker.New("kitefront", kc.GetEncToken())
+	//ticker = kiteticker.KiteTicker("kitefront", kc.GetEncToken())
 	//
 	//// Assign callbacks
 	//ticker.OnError(onError)
