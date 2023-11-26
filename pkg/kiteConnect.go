@@ -1,7 +1,7 @@
 package pkg
 
 import (
-	"github.com/mayank-sheoran/zerodha-sdk-go/pkg/constants"
+	"github.com/algotuners/zerodha-sdk-go/pkg/constants"
 	"net/http"
 )
 

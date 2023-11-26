@@ -2,10 +2,10 @@ package pkg
 
 import (
 	"fmt"
+	"github.com/algotuners/zerodha-sdk-go/pkg/constants"
+	httpUtils2 "github.com/algotuners/zerodha-sdk-go/pkg/httpUtils"
 	"github.com/gocarina/gocsv"
 	"github.com/google/go-querystring/query"
-	"github.com/mayank-sheoran/zerodha-sdk-go/pkg/constants"
-	httpUtils2 "github.com/mayank-sheoran/zerodha-sdk-go/pkg/httpUtils"
 	"github.com/zerodha/gokiteconnect/v4/models"
 	"net/http"
 	"net/url"

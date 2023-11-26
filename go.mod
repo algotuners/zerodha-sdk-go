@@ -1,4 +1,4 @@
-module github.com/mayank-sheoran/zerodha-sdk-go
+module github.com/algotuners/zerodha-sdk-go
 
 go 1.20
 

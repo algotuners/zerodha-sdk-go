@@ -2,7 +2,7 @@ package main
 
 import (
 	"fmt"
-	kiteticker "github.com/mayank-sheoran/zerodha-sdk-go/pkg"
+	kiteticker "github.com/algotuners/zerodha-sdk-go/pkg"
 	kiteconnect "github.com/zerodha/gokiteconnect/v4"
 	"github.com/zerodha/gokiteconnect/v4/models"
 	"os"
@@ -61,18 +61,18 @@ func onOrderUpdate(order kiteconnect.Order) {
 }
 
 func main() {
-	tokens := []string{"NSE:NIFTY BANK", "NSE:INFY"}
-	kiteConnect := kiteticker.KiteConnect("", "kitefront")
-	quote, err := kiteConnect.GetQuote(tokens...)
-	println(quote["NSE:NIFTY BANK"].InstrumentToken)
-	println(quote["NSE:INFY"].InstrumentToken)
-	if err != nil {
-		panic(err.Error())
-	}
-	marketDepth := map[string]models.Depth{}
-	for _, token := range tokens {
-		marketDepth[token] = quote[token].Depth
-	}
+	//tokens := []string{"NSE:NIFTY BANK", "NSE:INFY"}
+	//kiteConnect := kiteticker.KiteConnect("", "kitefront")
+	//quote, err := kiteConnect.GetQuote(tokens...)
+	//println(quote["NSE:NIFTY BANK"].InstrumentToken)
+	//println(quote["NSE:INFY"].InstrumentToken)
+	//if err != nil {
+	//	panic(err.Error())
+	//}
+	//marketDepth := map[string]models.Depth{}
+	//for _, token := range tokens {
+	//	marketDepth[token] = quote[token].Depth
+	//}
 
 	//kc := pkg.KiteConnect(
 	//	"",

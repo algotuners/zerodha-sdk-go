@@ -3,8 +3,8 @@ package pkg
 import (
 	"crypto/sha256"
 	"fmt"
-	"github.com/mayank-sheoran/zerodha-sdk-go/pkg/constants"
-	"github.com/mayank-sheoran/zerodha-sdk-go/pkg/models"
+	"github.com/algotuners/zerodha-sdk-go/pkg/constants"
+	"github.com/algotuners/zerodha-sdk-go/pkg/models"
 	"net/http"
 	"net/url"
 )
